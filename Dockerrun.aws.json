@@ -2,59 +2,52 @@
   "AWSEBDockerrunVersion": 2,
   "volumes": [
     {
-      "name": "php-app",
+      "name": "jenkins-master",
       "host": {
-        "sourcePath": "/var/app/current/php-app"
+        "sourcePath": "/var/app/current/jenkins_home"
       }
     },
     {
-      "name": "nginx-proxy-conf",
+      "name": "jenins-slave",
       "host": {
-        "sourcePath": "/var/app/current/proxy/conf.d"
+        "sourcePath": "/var/app/current/docker.sock"
       }
     }  
   ],
   "containerDefinitions": [
     {
-      "name": "php-app",
-      "image": "php:fpm",
+      "name": "jenkins-master",
+      "image": "argiebee/tool:jenkins-master-v002.002",
       "essential": true,
       "memory": 128,
+     "portMappings": [
+        {
+          "hostPort": 8080,
+          "containerPort": 8080
+        },
+        {
+          "hostPort": 50000,
+          "containerPort": 50000
+        }
+		
+      ],
       "mountPoints": [
         {
-          "sourceVolume": "php-app",
-          "containerPath": "/var/www/html",
+          "sourceVolume": "jenkins-master",
+          "containerPath": "/var/jenkins_home",
           "readOnly": true
         }
       ]
     },
     {
-      "name": "nginx-proxy",
-      "image": "nginx",
+      "name": "jenkins-slave",
+      "image": "argiebee/tool:jenkins-slave-latest",
       "essential": true,
       "memory": 128,
-      "portMappings": [
-        {
-          "hostPort": 80,
-          "containerPort": 80
-        }
-      ],
-      "links": [
-        "php-app"
-      ],
       "mountPoints": [
         {
-          "sourceVolume": "php-app",
-          "containerPath": "/var/www/html",
-          "readOnly": true
-        },
-        {
-          "sourceVolume": "awseb-logs-nginx-proxy",
-          "containerPath": "/var/log/nginx"
-        },
-        {
-          "sourceVolume": "nginx-proxy-conf",
-          "containerPath": "/etc/nginx/conf.d",
+          "sourceVolume": "jenkins-slave",
+          "containerPath": "/var/run/docker.sock",
           "readOnly": true
         }
       ]

@@ -2,7 +2,7 @@
 FROM jenkins/jenkins:latest
  
 # Installing the plugins we need using the in-built install-plugins.sh script
-RUN /usr/local/bin/install-plugins.sh git matrix-auth workflow-aggregator docker-workflow blueocean credentials-binding mstest pipeline-utility-steps jdk-tool command-agent-launcher amazon-web-services-sdk aws-elastic-beanstalk-deployment bouncycastle-api cloudbees-aws-credentials
+RUN /usr/local/bin/install-plugins.sh git matrix-auth workflow-aggregator docker-workflow blueocean credentials-binding mstest pipeline-utility-steps jdk-tool command-agent-launcher amazon-web-services-sdk aws-elastic-beanstalk-deployment bouncycastle-api cloudbees-aws-credentials pipeline-utility-steps
  
 # Setting up environment variables for Jenkins admin user
 ENV JENKINS_USER admin
